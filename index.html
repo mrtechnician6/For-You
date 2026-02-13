@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NK Digital Services | Interactive Date Site</title>
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --deep-rose: #c9184a;
+            --soft-pink: #ffb3c1;
+        }
+
+        /* Animated Romantic Background */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #ff85a1, #ffafcc, #f72585, #ff85a1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Hearts Layer */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Main Container */
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-pink);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        h1 {
+            color: var(--deep-rose);
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 80%;
+        }
+
+        #yesBtn {
+            background: var(--primary-pink);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        #noBtn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        #persuasionText {
+            margin-top: 20px;
+            min-height: 24px;
+            color: var(--deep-rose);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Success Screen */
+        #success { display: none; }
+        
+        .whatsapp-btn {
+            background-color: #25D366 !important;
+            color: white !important;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart-bg" id="heartContainer"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="Varsha Thapa - Maaya (Official Lyrical Video)(MP3_160K).mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container" id="mainCard">
+        <img src="https://images.unsplash.com/photo-1518197146369-01159947588e?w=400" alt="Rose">
+        <h1>Will you go on a date with me? ✨</h1>
+        
+        <div class="btn-group">
+            <button id="yesBtn" onclick="celebrate()">YES! 😍</button>
+            <button id="noBtn" onclick="handleNo()">No 😢</button>
+        </div>
+
+        <div id="persuasionText"></div>
+    </div>
+
+    <div class="container" id="success">
+        <h1 style="font-size: 2.5rem;">🎉❤️✨</h1>
+        <h1>I Knew You'd Say Yes!</h1>
+        <p>I am the luckiest person! Let's talk on WhatsApp.</p>
+        <button class="whatsapp-btn" onclick="sendRSVP()">Confirm on WhatsApp ✅</button>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const messages = [
+            "Are you sure? 🥺",
+            "I'll buy you your favorite food! 🍕",
+            "Please? Just one chance! 🙏",
+            "Don't be so mean... 💔",
+            "I'll give you a big surprise! 🎁",
+            "Okay, now you're just teasing! Catch me! 😂"
+        ];
+
+        // Create Floating Hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.opacity = Math.random();
+            heart.style.color = 'white';
+            heart.style.transition = `transform ${Math.random() * 3 + 2}s linear, opacity 3s`;
+            document.getElementById('heartContainer').appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+
+        function handleNo() {
+            const noBtn = document.getElementById('noBtn');
+            const pText = document.getElementById('persuasionText');
+            const yesBtn = document.getElementById('yesBtn');
+            const music = document.getElementById('bgMusic');
+
+            music.play().catch(() => {}); // Play music on click
+
+            if (clickCount < messages.length) {
+                pText.innerText = messages[clickCount];
+                // Make Yes button huge
+                let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (currentSize + 3) + 'px';
+                yesBtn.style.width = (90 + clickCount * 2) + '%';
+            }
+
+            if (clickCount >= 5) {
+                moveButton();
+            }
+            clickCount++;
+        }
+
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.style.zIndex = '999';
+        }
+
+        function celebrate() {
+            document.getElementById('mainCard').style.display = 'none';
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('bgMusic').play();
+        }
+
+        function sendRSVP() {
+            const phoneNumber = "9779804650880"; // CHANGE TO YOUR NUMBER
+            const message = "YES! I am so excited for our date! ❤️✨";
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
